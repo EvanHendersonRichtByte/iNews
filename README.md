@@ -1,29 +1,27 @@
 # iNews
 
-This template should help get you started developing with Vue 3 in Vite.
+SPA web app about news in Indonesia using SPA approach
 
-## Recommended IDE Setup
+### Installation
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-typescript-vue-plugin).
+`npm install`
 
-## Customize configuration
+#### Development
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+`npm start`
 
-## Project Setup
+#### Minify and Deploy
 
-```sh
-npm install
-```
+`npm run build`
 
-### Compile and Hot-Reload for Development
+## Technology
 
-```sh
-npm run dev
-```
+#### Framework
 
-### Compile and Minify for Production
+[VueJS](https://vuejs.org/)
 
-```sh
-npm run build
-```
+#### Libraries:
+
+[Bootstrap](https://getbootstrap.com/)
+
+[Axios](https://www.npmjs.com/package/axios)

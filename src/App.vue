@@ -1,81 +1,94 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      news: [],
+      highlight: {},
+      input: "example",
+      test: "",
+    };
+  },
+  methods: {
+    getImage(index) {
+      return this.news.data[index].image;
+    },
+  },
+  async mounted() {
+    await axios
+      .get(
+        "https://berita-api-d8qkqgisu-satyawikananda.vercel.app/v1/tribun-news"
+      )
+      .then(({ data }) => {
+        this.highlight = data.data[0];
+        this.news = data.data.filter((v, i) => i !== 0);
+        console.log(this.news);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  },
+};
+
+import axios from "axios";
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <main class="container">
+    <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
+      <div class="col-md-6 px-0">
+        <h1 class="display-4 fst-italic">
+          {{ highlight.title }}
+        </h1>
+        <p class="lead my-3">
+          {{ highlight.contentSnippet }}
+        </p>
+        <p class="lead mb-0">
+          <a :href="highlight.link" target="_blank" class="text-white fw-bold"
+            >Continue reading...</a
+          >
+        </p>
+      </div>
     </div>
-  </header>
 
-  <main>
-    <TheWelcome />
+    <div class="row mb-2">
+      <div class="col-md-6" :key="data.title" v-for="data in news">
+        <div
+          class="
+            row
+            g-0
+            border
+            rounded
+            overflow-hidden
+            flex-md-row
+            mb-4
+            shadow-sm
+            h-md-250
+            position-relative
+          "
+        >
+          <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-success">Latest</strong>
+            <h3 class="mb-0">{{ data.title }}</h3>
+            <div class="mb-1 text-muted">
+              {{ new Date(data.isoDate).toUTCString() }}
+            </div>
+            <p class="mb-auto">
+              {{ data.contentSnippet }}
+            </p>
+            <a :href="data.link" target="_blank" class="stretched-link"
+              >Continue reading</a
+            >
+          </div>
+          <div class="col-auto d-none d-lg-block">
+            <img :src="data.image" width="200" alt="Gambar Tidak Ditemukan" />
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </template>
 
 <style>
-@import './assets/base.css';
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
-}
-
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-}
+@import "bootstrap/dist/css/bootstrap.css";
 </style>
