@@ -4,9 +4,8 @@ export default {
   data() {
     return {
       news: [],
-      highlight: {},
-      input: "example",
-      test: "",
+      highlight: [],
+      isLoading: true,
     };
   },
   methods: {
@@ -20,75 +19,46 @@ export default {
         "https://berita-api-d8qkqgisu-satyawikananda.vercel.app/v1/tribun-news"
       )
       .then(({ data }) => {
-        this.highlight = data.data[0];
-        this.news = data.data.filter((v, i) => i !== 0);
-        console.log(this.news);
+        this.highlight = data.data.filter((_, i) => i >= 0 && i <= 2);
+        this.news = data.data.filter((_, i) => i > 2);
       })
       .catch((err) => {
         throw err;
       });
+    this.isLoading = false;
   },
+  components: { Carousel, Header },
 };
 
 import axios from "axios";
+import Carousel from "./components/Carousel.vue";
+import Header from "./components/Header.vue";
 </script>
 
 <template>
-  <main class="container">
-    <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
-      <div class="col-md-6 px-0">
-        <h1 class="display-4 fst-italic">
-          {{ highlight.title }}
-        </h1>
-        <p class="lead my-3">
-          {{ highlight.contentSnippet }}
-        </p>
-        <p class="lead mb-0">
-          <a :href="highlight.link" target="_blank" class="text-white fw-bold"
-            >Continue reading...</a
+  <main v-if="!isLoading">
+    <Header />
+    <div class="container">
+      <Carousel :news="news" :highlight="highlight" />
+      <div class="col-md-12">
+        <div class="row justify-content-center justify-content-sm-center justify-content-md-between">
+          <div
+            class="card mt-5"
+            style="width: 21rem"
+            :key="n.title"
+            v-for="n in news"
           >
-        </p>
-      </div>
-    </div>
-
-    <div class="row mb-2">
-      <div class="col-md-6" :key="data.title" v-for="data in news">
-        <div
-          class="
-            row
-            g-0
-            border
-            rounded
-            overflow-hidden
-            flex-md-row
-            mb-4
-            shadow-sm
-            h-md-250
-            position-relative
-          "
-        >
-          <div class="col p-4 d-flex flex-column position-static">
-            <strong class="d-inline-block mb-2 text-success">Latest</strong>
-            <h3 class="mb-0">{{ data.title }}</h3>
-            <div class="mb-1 text-muted">
-              {{ new Date(data.isoDate).toUTCString() }}
+            <img class="card-img-top" :src="n.image" alt="Card image cap" />
+            <div class="card-body">
+              <h5 class="card-title">{{ n.title }}</h5>
+              <p class="card-text">
+                {{ n.contentSnippet }}
+              </p>
+              <a :href="n.link" class="btn btn-dark">Continue Reading</a>
             </div>
-            <p class="mb-auto">
-              {{ data.contentSnippet }}
-            </p>
-            <a :href="data.link" target="_blank" class="stretched-link"
-              >Continue reading</a
-            >
-          </div>
-          <div class="col-auto d-none d-lg-block">
-            <img :src="data.image" width="200" alt="Gambar Tidak Ditemukan" />
           </div>
         </div>
       </div>
     </div>
   </main>
 </template>
-
-<style>
-@import "bootstrap/dist/css/bootstrap.css";
-</style>
